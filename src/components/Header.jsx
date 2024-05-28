@@ -1,6 +1,11 @@
-import React from 'react'
+import { useMemo } from 'react'
 
-const Header = ({cart}) => {
+const Header = ({cart, removeFromCart, increaseQuantity, decreaseQuantity}) => {
+
+    //State derivado
+    const isEmpty = useMemo( () => cart.length === 0, [cart])
+    const cartTotal = useMemo( () => cart.reduce((total, item) => total + (item.quantity * item.price), 0), [cart])
+
   return (
     <header className="py-5 header">
       <div className="container-xl">
@@ -18,10 +23,10 @@ const Header = ({cart}) => {
 
                       <div id="carrito" className="bg-white p-3">
                           
-                          {cart.length === 0 ?(
+                          { isEmpty ?(
                             <p className="text-center">El carrito esta vacio</p>
                           ) : (
-                            <div>
+                            <>
                                 <table className="w-100 table">
                                 <thead>
                                     <tr>
@@ -47,6 +52,7 @@ const Header = ({cart}) => {
                                             <button
                                                 type="button"
                                                 className="btn btn-dark"
+                                                onClick={() => decreaseQuantity(guitar.id)}
                                             >
                                                 -
                                             </button>
@@ -54,6 +60,7 @@ const Header = ({cart}) => {
                                             <button
                                                 type="button"
                                                 className="btn btn-dark"
+                                                onClick={() => increaseQuantity(guitar.id)}
                                             >
                                                 +
                                             </button>
@@ -62,6 +69,7 @@ const Header = ({cart}) => {
                                             <button
                                                 className="btn btn-danger"
                                                 type="button"
+                                                onClick={() => removeFromCart(guitar.id)}
                                             >
                                                 X
                                             </button>
@@ -70,9 +78,9 @@ const Header = ({cart}) => {
                                     ))}
                                 </tbody>
                                 </table>
-                                <p className="text-end">Total pagar: <span className="fw-bold">$899</span></p>
+                                <p className="text-end">Total pagar: <span className="fw-bold">${cartTotal}</span></p>
                                 <button className="btn btn-dark w-100 mt-3 p-2">Vaciar Carrito</button>
-                            </div>
+                            </>
                           )}
                           
                       </div>
